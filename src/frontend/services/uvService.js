@@ -1,8 +1,6 @@
-const API_BASE_URL = 'http://localhost:5000/api'
-
 export async function getCurrentUvByCoords(latitude, longitude) {
   const response = await fetch(
-    `${API_BASE_URL}/uv/current?lat=${latitude}&lng=${longitude}`
+    `/api/uv/current?lat=${latitude}&lng=${longitude}`
   )
 
   if (!response.ok) {
@@ -14,7 +12,7 @@ export async function getCurrentUvByCoords(latitude, longitude) {
 
 export async function searchLocation(query) {
   const response = await fetch(
-    `${API_BASE_URL}/location/search?query=${encodeURIComponent(query)}`
+    `/api/location/search?query=${encodeURIComponent(query)}`
   )
 
   if (!response.ok) {
