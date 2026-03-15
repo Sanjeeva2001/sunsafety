@@ -105,12 +105,6 @@
                 <span class="mini-info-label">Sun protection</span>
                 <strong class="mini-info-value">Needed when UV is 3+</strong>
               </div>
-
-              <div class="mini-info-card mini-info-card--light">
-                <span class="mini-info-label">Today's peak UV</span>
-                <strong class="mini-info-value">{{ todayPeakUvText }}</strong>
-                <small class="mini-info-note">{{ todayPeakTimeText }}</small>
-              </div>
             </div>
 
             <div
@@ -118,7 +112,7 @@
               :style="{ borderColor: uvDisplayInfo.color }"
             >
               <div class="warning-header">
-                <span class="warning-icon" aria-hidden="true">⚠️</span>
+                <span class="warning-icon" aria-hidden="true">âš ï¸</span>
 
                 <div>
                   <h3 class="warning-title">
@@ -135,17 +129,17 @@
 
               <div class="protection-grid">
                 <div class="protection-item">
-                  <span class="protection-icon" aria-hidden="true">🧴</span>
+                  <span class="protection-icon" aria-hidden="true">ðŸ§´</span>
                   <span class="protection-label">SPF50+</span>
                 </div>
 
                 <div class="protection-item">
-                  <span class="protection-icon" aria-hidden="true">👒</span>
+                  <span class="protection-icon" aria-hidden="true">ðŸ‘’</span>
                   <span class="protection-label">Hat</span>
                 </div>
 
                 <div class="protection-item">
-                  <span class="protection-icon" aria-hidden="true">🕶️</span>
+                  <span class="protection-icon" aria-hidden="true">ðŸ•¶ï¸</span>
                   <span class="protection-label">Sunglasses</span>
                 </div>
               </div>
@@ -166,132 +160,12 @@
       <section v-if="uvData" class="lower-panels">
         <section class="detail-card">
           <div class="detail-card__header">
-            <div class="detail-icon detail-icon--sun" aria-hidden="true">☀️</div>
-
-            <div>
-              <h2 class="detail-title">Today's UV Forecast</h2>
-              <p class="detail-subtitle">
-                Real hourly UV forecast for today from the weather response.
-              </p>
-            </div>
-          </div>
-
-          <div v-if="forecastPoints.length" class="forecast-chart">
-            <svg
-              viewBox="0 0 760 320"
-              class="forecast-svg"
-              aria-label="Today's UV forecast chart"
-            >
-              <g>
-                <rect
-                  v-for="band in forecastBands"
-                  :key="band.label"
-                  :x="chartBounds.left"
-                  :y="getBandY(band.max)"
-                  :width="chartBounds.right - chartBounds.left"
-                  :height="getBandHeight(band.min, band.max)"
-                  :fill="band.color"
-                />
-
-                <line
-                  v-for="level in yAxisLevels"
-                  :key="level"
-                  :x1="chartBounds.left"
-                  :x2="chartBounds.right"
-                  :y1="getChartY(level)"
-                  :y2="getChartY(level)"
-                  class="forecast-grid-line"
-                />
-
-                <text
-                  v-for="level in yAxisLevels"
-                  :key="`y-label-${level}`"
-                  :x="chartBounds.left - 12"
-                  :y="getChartY(level) + 4"
-                  class="forecast-axis-label"
-                  text-anchor="end"
-                >
-                  {{ level }}
-                </text>
-
-                <text
-                  v-for="band in forecastBands"
-                  :key="`band-label-${band.label}`"
-                  :x="chartBounds.right - 10"
-                  :y="getBandLabelY(band.min, band.max)"
-                  class="forecast-band-label"
-                  text-anchor="end"
-                >
-                  {{ band.label }}
-                </text>
-
-                <line
-                  :x1="chartBounds.left"
-                  :x2="chartBounds.right"
-                  :y1="chartBounds.bottom"
-                  :y2="chartBounds.bottom"
-                  class="forecast-axis-line"
-                />
-
-                <line
-                  :x1="chartBounds.left"
-                  :x2="chartBounds.left"
-                  :y1="chartBounds.top"
-                  :y2="chartBounds.bottom"
-                  class="forecast-axis-line"
-                />
-
-                <line
-                  v-for="tick in forecastTicks"
-                  :key="tick.label"
-                  :x1="tick.x"
-                  :x2="tick.x"
-                  :y1="chartBounds.bottom"
-                  :y2="chartBounds.bottom + 8"
-                  class="forecast-axis-line"
-                />
-
-                <text
-                  v-for="tick in forecastTicks"
-                  :key="`tick-label-${tick.label}`"
-                  :x="tick.x"
-                  :y="chartBounds.bottom + 24"
-                  class="forecast-axis-label"
-                  text-anchor="middle"
-                >
-                  {{ tick.label }}
-                </text>
-
-                <polyline
-                  :points="forecastPolyline"
-                  class="forecast-line"
-                />
-
-                <circle
-                  v-for="point in forecastPoints"
-                  :key="point.key"
-                  :cx="getChartX(point.hour)"
-                  :cy="getChartY(point.uvIndex)"
-                  r="3.5"
-                  class="forecast-point"
-                />
-              </g>
-            </svg>
-          </div>
-
-          <p v-else class="empty-panel-text">
-            Today's hourly UV forecast is not available in the current API response.
-          </p>
-        </section>
-
-        <section class="detail-card">
-          <div class="detail-card__header">
-            <div class="detail-icon detail-icon--alert" aria-hidden="true">⏱️</div>
+            <div class="detail-icon detail-icon--alert" aria-hidden="true">â±ï¸</div>
 
             <div>
               <h2 class="detail-title">Skin Damage Times at Current UV Level</h2>
               <p class="detail-subtitle">
-                Simple estimate based on the live UV value shown above.
+                Simple estimate based on the live UV value shown above. Minimal when UV is below 2.5.
               </p>
             </div>
           </div>
@@ -341,23 +215,6 @@ const hasMapboxToken = computed(() => Boolean(mapboxToken))
 let refreshTimer = null
 let map = null
 let marker = null
-
-const chartBounds = {
-  left: 64,
-  right: 710,
-  top: 24,
-  bottom: 270,
-}
-
-const forecastBands = [
-  { label: 'Low', min: 0, max: 2, color: '#c8e2b6' },
-  { label: 'Moderate', min: 3, max: 5, color: '#e9e4a8' },
-  { label: 'High', min: 6, max: 7, color: '#ecd4a5' },
-  { label: 'Very High', min: 8, max: 10, color: '#e7bcc4' },
-  { label: 'Extreme', min: 11, max: 15, color: '#d8d0ef' },
-]
-
-const yAxisLevels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
 
 const skinTypeReference = [
   { label: 'Type I (Very Fair)', baseMinutesAtUv8: 7 },
@@ -546,185 +403,8 @@ function formatCoordinate(value, positiveDirection, negativeDirection) {
   }
 
   const direction = numericValue >= 0 ? positiveDirection : negativeDirection
-  return `${Math.abs(numericValue).toFixed(4)}°${direction}`
+  return `${Math.abs(numericValue).toFixed(4)}Â°${direction}`
 }
-
-function formatHourLabel(hour) {
-  const wholeHour = Math.round(hour)
-  return `${String(wholeHour).padStart(2, '0')}:00`
-}
-
-function extractHourValue(rawTime) {
-  if (typeof rawTime === 'number' && Number.isFinite(rawTime)) {
-    if (rawTime > 1000000000) {
-      const date = new Date(rawTime * 1000)
-      return date.getHours() + date.getMinutes() / 60
-    }
-
-    if (rawTime >= 0 && rawTime <= 23) {
-      return rawTime
-    }
-  }
-
-  const date = getValidDate(rawTime)
-  if (!date) return null
-
-  return date.getHours() + date.getMinutes() / 60
-}
-
-function isSameLocalDay(dateA, dateB) {
-  return (
-    dateA.getFullYear() === dateB.getFullYear() &&
-    dateA.getMonth() === dateB.getMonth() &&
-    dateA.getDate() === dateB.getDate()
-  )
-}
-
-const rawHourlyForecast = computed(() => {
-  return (
-    uvData.value?.hourly ||
-    uvData.value?.forecast ||
-    uvData.value?.hourlyForecast ||
-    uvData.value?.todayForecast ||
-    []
-  )
-})
-
-const forecastPoints = computed(() => {
-  if (!Array.isArray(rawHourlyForecast.value)) {
-    return []
-  }
-
-  const referenceDate = getValidDate(uvData.value?.time) || new Date()
-
-  return rawHourlyForecast.value
-    .map((item, index) => {
-      const uvIndex = Number(
-        item?.uvi ??
-        item?.uvIndex ??
-        item?.uv ??
-        item?.value ??
-        item?.index
-      )
-
-      const rawTime =
-        item?.dt ??
-        item?.time ??
-        item?.timestamp ??
-        item?.datetime ??
-        item?.hour
-
-      const date = getValidDate(rawTime)
-      const hour = extractHourValue(rawTime)
-
-      return {
-        key: item?.id ?? `forecast-${index}`,
-        uvIndex,
-        hour,
-        date,
-      }
-    })
-    .filter((item) => {
-      return (
-        Number.isFinite(item.uvIndex) &&
-        Number.isFinite(item.hour) &&
-        item.date &&
-        isSameLocalDay(item.date, referenceDate)
-      )
-    })
-    .sort((a, b) => a.hour - b.hour)
-})
-
-const todayPeakPoint = computed(() => {
-  if (!forecastPoints.value.length) return null
-
-  return forecastPoints.value.reduce((highest, point) => {
-    if (!highest || point.uvIndex > highest.uvIndex) {
-      return point
-    }
-
-    return highest
-  }, null)
-})
-
-const todayPeakUvText = computed(() => {
-  if (!todayPeakPoint.value) return 'Unavailable'
-
-  const value = todayPeakPoint.value.uvIndex
-  return Number.isInteger(value) ? String(value) : value.toFixed(1)
-})
-
-const todayPeakTimeText = computed(() => {
-  if (!todayPeakPoint.value) return 'No hourly forecast data'
-
-  return `Around ${formatHourLabel(todayPeakPoint.value.hour)}`
-})
-
-const forecastRange = computed(() => {
-  if (!forecastPoints.value.length) {
-    return { minHour: 6, maxHour: 18 }
-  }
-
-  const hours = forecastPoints.value.map((item) => item.hour)
-  const minHour = Math.floor(Math.min(...hours))
-  const maxHour = Math.ceil(Math.max(...hours))
-
-  if (minHour === maxHour) {
-    return { minHour: minHour - 1, maxHour: maxHour + 1 }
-  }
-
-  return { minHour, maxHour }
-})
-
-function getChartX(hour) {
-  const { minHour, maxHour } = forecastRange.value
-  const usableWidth = chartBounds.right - chartBounds.left
-  return chartBounds.left + ((hour - minHour) / (maxHour - minHour)) * usableWidth
-}
-
-function getChartY(uvIndex) {
-  const maxUv = 15
-  const usableHeight = chartBounds.bottom - chartBounds.top
-  return chartBounds.bottom - (uvIndex / maxUv) * usableHeight
-}
-
-function getBandY(maxValue) {
-  return getChartY(maxValue)
-}
-
-function getBandHeight(minValue, maxValue) {
-  return getChartY(minValue) - getChartY(maxValue)
-}
-
-function getBandLabelY(minValue, maxValue) {
-  return getChartY((minValue + maxValue) / 2) + 4
-}
-
-const forecastPolyline = computed(() => {
-  if (!forecastPoints.value.length) {
-    return ''
-  }
-
-  return forecastPoints.value
-    .map((point) => `${getChartX(point.hour)},${getChartY(point.uvIndex)}`)
-    .join(' ')
-})
-
-const forecastTicks = computed(() => {
-  const { minHour, maxHour } = forecastRange.value
-  const totalHours = maxHour - minHour
-  const step = totalHours <= 6 ? 1 : 3
-  const ticks = []
-
-  for (let hour = minHour; hour <= maxHour; hour += step) {
-    ticks.push({
-      label: formatHourLabel(hour),
-      x: getChartX(hour),
-    })
-  }
-
-  return ticks
-})
 
 function getSkinToneClass(minutes) {
   if (minutes <= 10) return 'skin-card__time--danger'
@@ -741,6 +421,14 @@ const skinDamageItems = computed(() => {
       return {
         ...item,
         timeText: 'Low risk',
+        toneClass: 'skin-card__time--safe',
+      }
+    }
+
+    if (currentUv < 2.5) {
+      return {
+        ...item,
+        timeText: 'Minimal',
         toneClass: 'skin-card__time--safe',
       }
     }
@@ -1322,10 +1010,6 @@ onUnmounted(() => {
   flex-shrink: 0;
 }
 
-.detail-icon--sun {
-  background: #fff2b8;
-}
-
 .detail-icon--alert {
   background: #ffd8d8;
 }
@@ -1338,62 +1022,6 @@ onUnmounted(() => {
 
 .detail-subtitle {
   margin: 0.3rem 0 0;
-  color: #5b6170;
-  line-height: 1.5;
-}
-
-.forecast-chart {
-  overflow-x: auto;
-}
-
-.forecast-svg {
-  width: 100%;
-  min-width: 720px;
-  height: auto;
-  display: block;
-  background: #fcfaf5;
-  border-radius: 16px;
-}
-
-.forecast-grid-line {
-  stroke: rgba(30, 41, 59, 0.14);
-  stroke-width: 1;
-}
-
-.forecast-axis-line {
-  stroke: #5f6775;
-  stroke-width: 1.3;
-}
-
-.forecast-axis-label {
-  fill: #4b5563;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.forecast-band-label {
-  fill: #202530;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.forecast-line {
-  fill: none;
-  stroke: #1d9bf0;
-  stroke-width: 3;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.forecast-point {
-  fill: #1d9bf0;
-}
-
-.empty-panel-text {
-  margin: 0;
-  padding: 1rem 1.1rem;
-  border-radius: 14px;
-  background: #fcfaf5;
   color: #5b6170;
   line-height: 1.5;
 }
