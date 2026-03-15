@@ -20,19 +20,42 @@
         <div v-if="uvData" class="uv-result">
           <h2 class="result-title">Current UV Result</h2>
 
-          <p class="result-line">
-            <strong>UV Index:</strong> {{ uvData.uvIndex }}
-          </p>
+          <div
+            v-if="uvDisplayInfo"
+            class="uv-summary"
+            :style="{ borderLeftColor: uvDisplayInfo.color }"
+          >
+            <p class="result-line">
+              <strong>UV Index:</strong> {{ uvData.uvIndex }}
+            </p>
+
+            <p class="result-line">
+              <strong>Risk Level:</strong>
+              <span
+                class="uv-risk-badge"
+                :style="{
+                  backgroundColor: uvDisplayInfo.color,
+                  color: uvDisplayInfo.textColor
+                }"
+              >
+                {{ uvDisplayInfo.level }}
+              </span>
+            </p>
+
+            <p class="uv-guidance">
+              {{ uvDisplayInfo.message }}
+            </p>
+          </div>
 
           <p class="result-line">
             <strong>Location:</strong> {{ uvData.locationName }}
           </p>
 
-          <p class="result-line" v-if="formattedTime">
+          <p v-if="formattedTime" class="result-line">
             <strong>Updated:</strong> {{ formattedTime }}
           </p>
 
-          <p class="result-line" v-if="uvData.timezone">
+          <p v-if="uvData.timezone" class="result-line">
             <strong>Timezone:</strong> {{ uvData.timezone }}
           </p>
 
@@ -59,6 +82,7 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import LocationInput from '../components/LocationInput.vue'
 import { getCurrentUvByCoords, searchLocation } from '../services/uvService'
+import { getUvDisplayInfo } from '../utilis/uvScale.js'
 
 const isLoading = ref(false)
 const errorMessage = ref('')
@@ -85,6 +109,14 @@ const formattedTime = computed(() => {
     dateStyle: 'medium',
     timeStyle: 'short',
   }).format(date)
+})
+
+const uvDisplayInfo = computed(() => {
+  if (uvData.value?.uvIndex == null) {
+    return null
+  }
+
+  return getUvDisplayInfo(uvData.value.uvIndex)
 })
 
 async function fetchUvData() {
@@ -235,6 +267,29 @@ onUnmounted(() => {
 
 .result-line {
   margin: 0;
+  color: #374151;
+  line-height: 1.5;
+}
+
+.uv-summary {
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-left: 6px solid;
+  border-radius: 12px;
+  background: #f9fafb;
+}
+
+.uv-risk-badge {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.uv-guidance {
+  margin: 0.25rem 0 0;
   color: #374151;
   line-height: 1.5;
 }
