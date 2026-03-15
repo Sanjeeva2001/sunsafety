@@ -3,11 +3,11 @@
     <h1 class="page-title">Sun Safety Awareness</h1>
 
     <p class="page-description">
-      This section shows skin cancer statistics in Australia and explains why UV exposure should be taken seriously.
+      This section shows skin cancer statistics in Australia and a 12-month UV trend across selected Australian cities.
     </p>
 
     <div v-if="loading" class="status-box">
-      Loading skin cancer statistics...
+      Loading awareness data...
     </div>
 
     <div v-else-if="error" class="status-box error">
@@ -17,12 +17,14 @@
     <div v-else class="content-block">
       <SkinCancerChart :stats="skinCancerStats" />
 
+      <UvTrendChart :uvTrend="uvTrendData" />
+
       <div class="insight-box">
         <h2>Why this matters</h2>
         <p>
-          Australia has very high UV exposure, and repeated overexposure can damage skin cells over time.
-          This increases the risk of skin cancer, including melanoma. These statistics show why regular
-          sun protection is important, especially when UV levels are high.
+          UV levels in Australia can stay high for long periods, especially in warmer months.
+          Repeated exposure to strong UV radiation can damage the skin over time and increase
+          the risk of skin cancer. This is why sun protection should be used whenever UV levels are high.
         </p>
       </div>
     </div>
@@ -32,22 +34,32 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import SkinCancerChart from './SkinCancerChart.vue'
+import UvTrendChart from './UvTrendChart.vue'
 
 const skinCancerStats = ref([])
+const uvTrendData = ref(null)
 const loading = ref(true)
 const error = ref('')
 
 onMounted(async () => {
   try {
-    const response = await fetch('/api/awareness/skin-cancer')
+    const [skinCancerResponse, uvTrendResponse] = await Promise.all([
+      fetch('/api/awareness/skin-cancer'),
+      fetch('/api/awareness/uv-trend')
+    ])
 
-    if (!response.ok) {
+    if (!skinCancerResponse.ok) {
       throw new Error('Failed to load skin cancer statistics')
     }
 
-    skinCancerStats.value = await response.json()
+    if (!uvTrendResponse.ok) {
+      throw new Error('Failed to load UV trend data')
+    }
+
+    skinCancerStats.value = await skinCancerResponse.json()
+    uvTrendData.value = await uvTrendResponse.json()
   } catch (err) {
-    error.value = err.message || 'Something went wrong while loading the chart data.'
+    error.value = err.message || 'Something went wrong while loading the awareness data.'
   } finally {
     loading.value = false
   }
