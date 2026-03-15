@@ -400,6 +400,8 @@ function initialiseMap() {
   } else {
     marker.setLngLat([longitude.value, latitude.value])
   }
+
+  map.resize()
 }
 
 async function fetchUvData() {
@@ -482,8 +484,8 @@ async function handleManualLocationSubmit(value) {
   }
 }
 
-watch([latitude, longitude], async ([newLatitude, newLongitude]) => {
-  if (newLatitude == null || newLongitude == null) return
+watch([isLoading, uvData, latitude, longitude], async ([loading, data, newLatitude, newLongitude]) => {
+  if (loading || !data || newLatitude == null || newLongitude == null) return
 
   await nextTick()
   initialiseMap()
