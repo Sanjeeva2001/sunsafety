@@ -77,7 +77,7 @@ const chartOptions = {
     },
     title: {
       display: true,
-      text: 'UV Trend Across Selected Australian Cities, Last 12 Months'
+      text: '12-Month UV Trend Across Selected Australian Cities'
     }
   },
   scales: {

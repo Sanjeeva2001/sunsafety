@@ -51,11 +51,6 @@
   z-index: 1;
 }
 
-.header-wrapper {
-  position: relative;
-  z-index: 3;
-}
-
 .hero-content {
   position: relative;
   z-index: 2;

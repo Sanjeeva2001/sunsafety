@@ -885,11 +885,6 @@ onUnmounted(() => {
   border: 1px solid #d2b1d8;
 }
 
-.mini-info-card--light {
-  background: linear-gradient(180deg, #ffffff 0%, #efefef 100%);
-  border: 1px solid #d8d8d8;
-}
-
 .mini-info-label {
   display: block;
   color: #4b5563;
@@ -902,13 +897,6 @@ onUnmounted(() => {
   color: #171717;
   font-size: 1.45rem;
   line-height: 1.25;
-}
-
-.mini-info-note {
-  display: block;
-  margin-top: 0.45rem;
-  color: #6b7280;
-  font-size: 0.78rem;
 }
 
 .warning-card {
