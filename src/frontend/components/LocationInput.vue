@@ -1,21 +1,21 @@
 <template>
   <section class="location-box">
-    <h3 class="location-title">Location access not available</h3>
+    <h3 class="location-title">Use a suburb or postcode instead</h3>
     <p class="location-text">
-      Enter your suburb or postcode to continue.
+      If location access is unavailable, enter your suburb or postcode to check today's UV risk manually.
     </p>
 
     <div class="location-form">
       <input
         v-model="inputValue"
         type="text"
-        placeholder="Suburb or postcode"
+        placeholder="Enter suburb or postcode"
         class="location-input"
         @keyup.enter="submitValue"
       />
 
       <button type="button" class="location-button" @click="submitValue">
-        Continue
+        Check UV Risk
       </button>
     </div>
   </section>
