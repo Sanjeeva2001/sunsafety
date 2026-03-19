@@ -2,14 +2,18 @@
   <section class="home-page">
     <div class="home-container">
       <header class="home-header">
-        <h1 class="page-subtitle">
-          Check the current UV level in your area and stay aware when you are outdoors.
+        <p class="page-kicker">Today's UV Risk</p>
+        <h1 class="page-title">
+          Check the UV where you are and what protection you need today.
         </h1>
+        <p class="page-subtitle">
+          Check before a walk, workout, beach trip, commute, or anything outdoors.
+        </p>
       </header>
 
       <section class="content-card">
         <p v-if="isLoading" class="status-text">
-          Loading your current UV data...
+          Loading your UV...
         </p>
 
         <p v-else-if="errorMessage" class="status-text status-text--error">
@@ -24,14 +28,14 @@
                 <span class="weather-icon__cloud"></span>
               </div>
 
-              <div>
-                <h2 class="location-title">
-                  Current UV Level in {{ displayLocation }}
-                </h2>
-                <p v-if="formattedDateLine" class="location-date">
-                  {{ formattedDateLine }}
-                </p>
-              </div>
+                <div>
+                  <h2 class="location-title">
+                    Today’s UV in {{ displayLocation }}
+                  </h2>
+                  <p v-if="formattedDateLine" class="location-date">
+                    {{ formattedDateLine }}
+                  </p>
+                </div>
             </div>
 
             <div class="map-wrapper">
@@ -101,9 +105,14 @@
             </div>
 
             <div class="mini-info-grid">
-              <div class="mini-info-card mini-info-card--purple">
-                <span class="mini-info-label">Sun protection</span>
-                <strong class="mini-info-value">Needed when UV is 3+</strong>
+              <div class="mini-info-card mini-info-card--gold">
+                <span class="mini-info-label">When to act</span>
+                <strong class="mini-info-value">Protect when UV hits 3+</strong>
+              </div>
+
+              <div class="mini-info-card mini-info-card--sand">
+                <span class="mini-info-label">So what?</span>
+                <strong class="mini-info-value">{{ practicalTakeaway }}</strong>
               </div>
             </div>
 
@@ -125,27 +134,27 @@
                 </div>
               </div>
 
-              <p class="warning-subtext">Full coverage when outside:</p>
+              <p class="warning-subtext">Before you head out:</p>
 
               <div class="protection-grid">
                 <div class="protection-item">
                   <span class="protection-icon" aria-hidden="true">🧴</span>
-                  <span class="protection-label">SPF50+</span>
+                  <span class="protection-label">Apply SPF50+</span>
                 </div>
 
                 <div class="protection-item">
                   <span class="protection-icon" aria-hidden="true">🧢</span>
-                  <span class="protection-label">Hat</span>
+                  <span class="protection-label">Pack a hat</span>
                 </div>
 
                 <div class="protection-item">
                   <span class="protection-icon" aria-hidden="true">🕶️</span>
-                  <span class="protection-label">Sunglasses</span>
+                  <span class="protection-label">Cover eyes + seek shade</span>
                 </div>
               </div>
 
               <p class="refresh-note">
-                This page refreshes automatically every 30 minutes.
+                Auto-refreshes every 30 minutes.
               </p>
             </div>
           </div>
@@ -157,15 +166,33 @@
         />
       </section>
 
-      <section v-if="uvData" class="lower-panels">
+      <section v-if="uvData" id="protection-guide" class="lower-panels">
+        <section class="detail-card detail-card--postcard">
+          <div class="detail-card__header">
+            <div class="detail-icon detail-icon--postcard" aria-hidden="true">✉️</div>
+
+            <div>
+              <h2 class="detail-title">Postcard from today</h2>
+              <p class="detail-subtitle">
+                A quick takeaway before you step outside.
+              </p>
+            </div>
+          </div>
+
+          <div class="postcard-panel">
+            <p class="postcard-panel__lead">{{ postcardHeadline }}</p>
+            <p class="postcard-panel__text">{{ postcardMessage }}</p>
+          </div>
+        </section>
+
         <section class="detail-card">
           <div class="detail-card__header">
             <div class="detail-icon detail-icon--alert" aria-hidden="true">⏱️</div>
 
             <div>
-              <h2 class="detail-title">Skin Damage Times at Current UV Level</h2>
+              <h2 class="detail-title">Estimated skin damage times at today’s UV</h2>
               <p class="detail-subtitle">
-                Simple estimate based on the live UV value shown above. Minimal when UV is below 2.5.
+                A simple estimate to make the number feel real.
               </p>
             </div>
           </div>
@@ -387,6 +414,72 @@ const burnWarningText = computed(() => {
   return 'Unprotected skin can burn in 10 to 15 minutes!'
 })
 
+const practicalTakeaway = computed(() => {
+  const value = Number(uvData.value?.uvIndex)
+
+  if (!Number.isFinite(value)) {
+    return 'UV data unavailable right now'
+  }
+
+  if (value < 3) {
+    return 'Lower risk now, but recheck before a longer outdoor session'
+  }
+
+  if (value <= 5) {
+    return 'A normal lunch break outside can still add up'
+  }
+
+  if (value <= 7) {
+    return 'Outdoor plans need shade, sunscreen, and timing'
+  }
+
+  return 'Limit direct sun and protect skin from the start'
+})
+
+const postcardHeadline = computed(() => {
+  const value = Number(uvData.value?.uvIndex)
+
+  if (!Number.isFinite(value)) {
+    return 'The sun risk is unclear until fresh UV data loads.'
+  }
+
+  if (value < 3) {
+    return 'Today looks calmer, but that does not mean you can ignore the UV.'
+  }
+
+  if (value <= 5) {
+    return 'Today’s sun can still catch you out during everyday routines.'
+  }
+
+  if (value <= 7) {
+    return 'Today is the kind of day where a short outdoor plan can become overexposure.'
+  }
+
+  return 'Today is a high-risk UV day, so protection should start before you step outside.'
+})
+
+const postcardMessage = computed(() => {
+  const value = Number(uvData.value?.uvIndex)
+
+  if (!Number.isFinite(value)) {
+    return 'Try again in a moment or enter a suburb or postcode so we can load the local conditions.'
+  }
+
+  if (value < 3) {
+    return 'If you are outside for longer, especially around reflective surfaces, keep an eye on changes and check again later.'
+  }
+
+  if (value <= 5) {
+    return 'Walking to class, waiting for transport, or eating outside can be enough time to need sunscreen, a hat, and shade.'
+  }
+
+  if (value <= 7) {
+    return 'This is a day to avoid relying on cloud cover or comfort level. The sun may not feel harsh, but UV can still damage skin.'
+  }
+
+  return 'Treat this like a plan-ahead day: sunscreen before leaving, a hat with you, sunglasses on, and shade built into your routine.'
+})
+
 const formattedLatitude = computed(() => {
   return formatCoordinate(latitude.value, 'N', 'S')
 })
@@ -591,7 +684,9 @@ onUnmounted(() => {
 .home-page {
   width: 100%;
   padding: 2.5rem 0 3rem;
-  background: linear-gradient(180deg, #f8f4e8 0%, #f6f0de 100%);
+  background:
+    radial-gradient(circle at top right, rgba(255, 213, 140, 0.3), transparent 22%),
+    linear-gradient(180deg, #fff8ef 0%, #fff3df 100%);
 }
 
 .home-container {
@@ -600,22 +695,40 @@ onUnmounted(() => {
 }
 
 .home-header {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.page-kicker {
+  margin: 0 0 0.5rem;
+  color: #b24c12;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.page-title {
+  max-width: 820px;
+  margin: 0;
+  color: #2f2218;
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+  line-height: 1.12;
 }
 
 .page-subtitle {
-  margin: 0;
-  color: #5b6170;
+  max-width: 760px;
+  margin: 0.9rem 0 0;
+  color: #655546;
   line-height: 1.6;
-  font-size: 1.25rem;
+  font-size: 1.08rem;
 }
 
 .content-card {
   padding: 1.5rem;
-  background: #f5efe2;
-  border: 1px solid #e1d7c5;
+  background: rgba(255, 251, 246, 0.92);
+  border: 1px solid #ecd8bf;
   border-radius: 26px;
-  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.07);
+  box-shadow: 0 18px 36px rgba(130, 76, 27, 0.08);
 }
 
 .status-text {
@@ -636,7 +749,7 @@ onUnmounted(() => {
 
 .uv-left-panel {
   padding-right: 1.5rem;
-  border-right: 2px solid #403c36;
+  border-right: 1px solid #e3cfba;
 }
 
 .location-banner {
@@ -700,12 +813,12 @@ onUnmounted(() => {
   margin: 0;
   font-size: 2rem;
   line-height: 1.08;
-  color: #1f1f1f;
+  color: #2a2017;
 }
 
 .location-date {
   margin: 0.3rem 0 0;
-  color: #54504a;
+  color: #6d5d50;
   font-size: 1.05rem;
 }
 
@@ -714,7 +827,7 @@ onUnmounted(() => {
   min-height: 380px;
   border-radius: 18px;
   overflow: hidden;
-  border: 2px solid #aab7bd;
+  border: 1px solid #d8c6b1;
   background: #e5e7eb;
 }
 
@@ -743,11 +856,11 @@ onUnmounted(() => {
 }
 
 .info-card {
-  background: linear-gradient(180deg, #ffffff 0%, #eaeaea 100%);
-  border: 1px solid #a7a7a7;
+  background: linear-gradient(180deg, #ffffff 0%, #fff6ea 100%);
+  border: 1px solid #e6d0b6;
   border-radius: 14px;
   padding: 1rem 1.1rem;
-  box-shadow: 0 7px 18px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 10px 24px rgba(130, 76, 27, 0.08);
 }
 
 .info-card--time {
@@ -819,7 +932,9 @@ onUnmounted(() => {
 .gauge-card {
   display: grid;
   justify-items: center;
-  padding-top: 0.5rem;
+  padding: 1rem 1rem 0.5rem;
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(255, 244, 220, 0.8) 0%, rgba(255, 255, 255, 0.95) 100%);
 }
 
 .uv-gauge {
@@ -855,7 +970,7 @@ onUnmounted(() => {
   font-size: clamp(3.8rem, 7vw, 5.4rem);
   line-height: 1;
   font-weight: 800;
-  color: #000000;
+  color: #2f241b;
 }
 
 .uv-risk-badge {
@@ -880,9 +995,14 @@ onUnmounted(() => {
   box-shadow: 0 7px 18px rgba(15, 23, 42, 0.08);
 }
 
-.mini-info-card--purple {
-  background: linear-gradient(180deg, #f2cbf2 0%, #d8b2dc 100%);
-  border: 1px solid #d2b1d8;
+.mini-info-card--gold {
+  background: linear-gradient(180deg, #fff0c8 0%, #ffe0a1 100%);
+  border: 1px solid #f0ca7f;
+}
+
+.mini-info-card--sand {
+  background: linear-gradient(180deg, #fff8eb 0%, #f5e6cf 100%);
+  border: 1px solid #e6d0b2;
 }
 
 .mini-info-label {
@@ -903,7 +1023,7 @@ onUnmounted(() => {
   padding: 1.35rem;
   border: 2px solid #dc2626;
   border-radius: 18px;
-  background: rgba(255, 225, 225, 0.82);
+  background: linear-gradient(180deg, rgba(255, 237, 231, 0.95) 0%, rgba(255, 247, 243, 0.92) 100%);
 }
 
 .warning-header {
@@ -975,10 +1095,15 @@ onUnmounted(() => {
 
 .detail-card {
   padding: 1.35rem;
-  background: #f5efe2;
-  border: 1px solid #e1d7c5;
+  background: rgba(255, 251, 246, 0.92);
+  border: 1px solid #ecd8bf;
   border-radius: 22px;
-  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.06);
+  box-shadow: 0 12px 30px rgba(130, 76, 27, 0.06);
+}
+
+.detail-card--postcard {
+  background:
+    linear-gradient(135deg, rgba(255, 244, 220, 0.95) 0%, rgba(255, 251, 243, 0.95) 100%);
 }
 
 .detail-card__header {
@@ -1002,6 +1127,10 @@ onUnmounted(() => {
   background: #ffd8d8;
 }
 
+.detail-icon--postcard {
+  background: #ffe9bf;
+}
+
 .detail-title {
   margin: 0;
   font-size: 1.8rem;
@@ -1012,6 +1141,27 @@ onUnmounted(() => {
   margin: 0.3rem 0 0;
   color: #5b6170;
   line-height: 1.5;
+}
+
+.postcard-panel {
+  padding: 1.2rem 1.3rem;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px dashed #e2ba80;
+}
+
+.postcard-panel__lead {
+  margin: 0 0 0.65rem;
+  color: #32241b;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.postcard-panel__text {
+  margin: 0;
+  color: #645345;
+  line-height: 1.7;
 }
 
 .skin-grid {
@@ -1027,9 +1177,9 @@ onUnmounted(() => {
   gap: 0.8rem;
   padding: 1rem 1.1rem;
   border-radius: 14px;
-  background: linear-gradient(180deg, #ffffff 0%, #efefef 100%);
-  border: 1px solid #d6d6d6;
-  box-shadow: 0 7px 16px rgba(15, 23, 42, 0.06);
+  background: linear-gradient(180deg, #ffffff 0%, #fff6ea 100%);
+  border: 1px solid #e6d0b6;
+  box-shadow: 0 10px 20px rgba(130, 76, 27, 0.06);
 }
 
 .skin-card__label {
@@ -1076,7 +1226,7 @@ onUnmounted(() => {
   .uv-left-panel {
     padding-right: 0;
     border-right: 0;
-    border-bottom: 2px solid #403c36;
+    border-bottom: 1px solid #e3cfba;
     padding-bottom: 1.5rem;
   }
 

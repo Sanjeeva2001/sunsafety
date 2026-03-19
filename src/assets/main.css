@@ -1,8 +1,16 @@
 @import './base.css';
 
 :root {
-  color: #0f172a;
-  background-color: #fffaf3;
+  color: #2d241d;
+  background-color: #fff8f0;
+  font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+  --surface-strong: #fffaf4;
+  --surface-soft: #fff3e1;
+  --surface-border: #ecd8bf;
+  --text-primary: #2d241d;
+  --text-secondary: #655546;
+  --accent-sun: #ffbf66;
+  --accent-deep: #8e3b12;
 }
 
 #app {
@@ -18,8 +26,17 @@ html {
 body {
   margin: 0;
   background:
-    radial-gradient(circle at top, rgba(251, 191, 36, 0.18), transparent 28%),
-    linear-gradient(180deg, #fffaf3 0%, #ffffff 58%, #fff7ed 100%);
+    radial-gradient(circle at top left, rgba(255, 192, 89, 0.24), transparent 24%),
+    radial-gradient(circle at 85% 12%, rgba(255, 205, 122, 0.16), transparent 18%),
+    radial-gradient(circle at top right, rgba(255, 227, 167, 0.32), transparent 26%),
+    linear-gradient(180deg, #fff8f0 0%, #fffdf9 55%, #fff2dc 100%);
+  color: var(--text-primary);
+  overflow-x: hidden;
+}
+
+::selection {
+  background: rgba(255, 191, 102, 0.42);
+  color: #3a1e0e;
 }
 
 
@@ -27,10 +44,14 @@ a {
   color: inherit;
 }
 
- 
 button,
 input,
 textarea,
 select {
   font: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
 }

@@ -2,9 +2,9 @@
   <section class="resources-page">
     <div class="resources-hero">
       <p class="hero-badge">Trusted Sources</p>
-      <h1>Resources for Sun Safety Awareness</h1>
+      <h1>Research, without the waffle.</h1>
       <p class="hero-description">
-        This page highlights the research, health guidance, and Australian reports that support the information shared on this website.
+        Quick, useful takeaways from the research behind SunSafety and why it matters in real life.
       </p>
     </div>
 
@@ -13,7 +13,7 @@
         <input
           v-model="searchText"
           type="text"
-          placeholder="Search resources..."
+          placeholder="Search sources..."
         />
       </div>
 
@@ -39,6 +39,8 @@
         :key="resource.id"
         class="resource-card"
       >
+        <div class="postcard-corner" aria-hidden="true"></div>
+
         <div class="card-header">
           <span class="category">{{ resource.category }}</span>
           <span class="year">{{ resource.year }}</span>
@@ -52,7 +54,7 @@
         </p>
 
         <div class="why-box">
-          <h3>Why this matters</h3>
+          <h3>What this means for you</h3>
           <p>{{ resource.whyItMatters }}</p>
         </div>
 
@@ -62,7 +64,7 @@
           rel="noopener noreferrer"
           class="learn-more-btn"
         >
-          Learn More
+          Read Source
         </a>
       </article>
     </div>
@@ -92,7 +94,7 @@ const resources = [
     summary:
       'This study explores how Australian teenagers think about sun safety, tanning and protective behaviour.',
     whyItMatters:
-      'It supports the idea that awareness alone is not always enough, because many young people still do not follow safe habits consistently.',
+      'Knowing the risk is not enough on its own, so people need a simple next step before they head outside.',
     link: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC8425089/'
   },
   {
@@ -104,7 +106,7 @@ const resources = [
     summary:
       'This paper looks at how sun protection behaviour changes over time across different age groups in Australia.',
     whyItMatters:
-      'It gives stronger research support for behaviour trends and shows why ongoing education about UV safety is still important.',
+      'Good habits slip, so quick UV checks and regular reminders work better than one big warning.',
     link: 'https://www.mdpi.com/1718-7729/30/8/520'
   },
   {
@@ -116,7 +118,7 @@ const resources = [
     summary:
       'This report presents Australian data on how people use sunscreen, hats and other protective measures during sunny periods.',
     whyItMatters:
-      'It adds recent Australian evidence to the project and helps show that this is a real public health issue, not just a personal opinion.',
+      'A lot of people still miss the basics, so prompts about sunscreen, hats, and shade still matter.',
     link: 'https://www.abs.gov.au/statistics/health/health-conditions-and-risks/sun-protection-behaviours/latest-release'
   },
   {
@@ -128,21 +130,21 @@ const resources = [
     summary:
       'This source discusses safe sun exposure in a balanced way, including both risks such as skin cancer and wider health considerations.',
     whyItMatters:
-      'It helps keep the website responsible and realistic by showing that sun safety advice should be evidence-based and balanced.',
+      'The best advice is balanced and usable, not fear-heavy and unrealistic.',
     link: 'https://research.monash.edu/en/publications/balancing-the-risks-and-benefits-of-sun-exposure-a-revised-positi/'
   },
   {
-  id: 5,
-  category: 'Article',
-  year: '2024',
-  title: 'Concerning new data shows almost half of Australians aren’t using adequate sun protection',
-  source: 'Cancer Council',
-  summary:
-    'A Cancer Council media release reporting new Australian survey findings on sunscreen use, tanning behaviour and inadequate sun protection during peak UV times.',
-  whyItMatters:
-    'It gives recent Australian evidence that many people are still not protecting themselves properly, which directly supports the purpose of this sun safety website.',
+    id: 5,
+    category: 'Article',
+    year: '2024',
+    title: 'Concerning new data shows almost half of Australians aren’t using adequate sun protection',
+    source: 'Cancer Council',
+    summary:
+      'A Cancer Council media release reporting new Australian survey findings on sunscreen use, tanning behaviour and inadequate sun protection during peak UV times.',
+    whyItMatters:
+      'Plenty of people still under-protect, so a quick UV check before going out can make a real difference.',
   link: 'https://www.cancer.org.au/media-releases/2024/concerning-new-data-shows-almost-half-of-australians-aren-t-using-adequate-sun-protection'
-}
+  }
 ]
 
 const filteredResources = computed(() => {
@@ -280,13 +282,56 @@ const filteredResources = computed(() => {
 }
 
 .resource-card {
+  position: relative;
   display: flex;
   flex-direction: column;
-  background: rgba(255, 255, 255, 0.96);
-  border: 1px solid #e3ebf2;
-  border-radius: 20px;
   padding: 22px;
-  box-shadow: 0 10px 28px rgba(18, 42, 66, 0.08);
+  border-radius: 24px;
+  background:
+    linear-gradient(135deg, rgba(255, 244, 220, 0.98) 0%, rgba(255, 253, 247, 0.98) 100%);
+  border: 1px solid #f1d6a9;
+  box-shadow: 0 16px 34px rgba(164, 96, 30, 0.12);
+  overflow: hidden;
+}
+
+.resource-card::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 78px;
+  height: 78px;
+  border-radius: 18px;
+  border: 2px dashed #e7b36d;
+}
+
+.resource-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(188, 137, 76, 0.07) 1px, transparent 1px);
+  background-size: 100% 2rem;
+  pointer-events: none;
+}
+
+.postcard-corner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 86px;
+  height: 86px;
+  background: linear-gradient(135deg, transparent 50%, rgba(243, 214, 169, 0.92) 50%);
+}
+
+.card-header,
+.resource-title,
+.resource-source,
+.resource-summary,
+.why-box,
+.learn-more-btn {
+  position: relative;
+  z-index: 1;
 }
 
 .card-header {
@@ -301,14 +346,14 @@ const filteredResources = computed(() => {
   display: inline-block;
   padding: 6px 12px;
   border-radius: 999px;
-  background: #e9f4ff;
-  color: #2460a7;
+  background: rgba(255, 255, 255, 0.74);
+  color: #9a460f;
   font-size: 0.82rem;
   font-weight: 700;
 }
 
 .year {
-  color: #6a7888;
+  color: #8d623f;
   font-size: 0.9rem;
   font-weight: 700;
 }
@@ -317,40 +362,41 @@ const filteredResources = computed(() => {
   margin: 0 0 10px;
   font-size: 1.15rem;
   line-height: 1.45;
-  color: #183153;
+  color: #412517;
 }
 
 .resource-source {
   margin: 0 0 14px;
-  color: #3477b8;
+  color: #8a572f;
   font-weight: 700;
   font-size: 0.95rem;
 }
 
 .resource-summary {
   margin: 0 0 18px;
-  color: #4e5f70;
+  color: #624d3f;
   line-height: 1.65;
   font-size: 0.96rem;
 }
 
 .why-box {
   margin-top: auto;
-  background: #f7fbff;
-  border: 1px solid #e4eef7;
-  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.74);
+  border: 1px solid #efd8b7;
+  border-radius: 16px;
   padding: 14px;
+  backdrop-filter: blur(4px);
 }
 
 .why-box h3 {
   margin: 0 0 8px;
   font-size: 0.95rem;
-  color: #183153;
+  color: #7b3914;
 }
 
 .why-box p {
   margin: 0;
-  color: #596b7b;
+  color: #624d3f;
   line-height: 1.6;
   font-size: 0.94rem;
 }
@@ -361,17 +407,18 @@ const filteredResources = computed(() => {
   align-items: center;
   margin-top: 18px;
   padding: 12px 16px;
-  border-radius: 12px;
-  background: #ffbf1f;
-  color: #1d1d1d;
+  border-radius: 999px;
+  background: #8e3b12;
+  color: #fff8f0;
   text-decoration: none;
   font-weight: 700;
   transition: 0.2s ease;
+  box-shadow: 0 10px 20px rgba(142, 59, 18, 0.18);
 }
 
 .learn-more-btn:hover {
   transform: translateY(-2px);
-  background: #f3b300;
+  background: #a94819;
 }
 
 .empty-state {
@@ -410,6 +457,19 @@ const filteredResources = computed(() => {
 
   .toolbar {
     gap: 14px;
+  }
+
+  .resource-card::before,
+  .postcard-corner {
+    display: none;
+  }
+}
+
+@media (min-width: 900px) {
+  .toolbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) auto;
+    align-items: center;
   }
 }
 </style>
